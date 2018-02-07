@@ -32,10 +32,10 @@
                             <td>{{list.created_at}}</td>
                             <td v-if="($parent.info.email == 'builuc1998@gmail.com' || $parent.info.email == 'vinguyet6666@asiamovie.info' || $parent.info.level == 3)" @change="chucvu(list.id)">
                                 <select :id="'chucvu'+list.id">
-                                    <option value="0">Normal</option>
-                                    <option value="1">Member</option>
-                                    <option value="2">Admin</option>
-                                    <option value="3">Supper Admin</option>
+                                    <option value="0" :selected="list.level == 0 ? 'selected' : ''">Normal</option>
+                                    <option value="1" :selected="list.level == 1 ? 'selected' : ''">Member</option>
+                                    <option value="2" :selected="list.level == 2 ? 'selected' : ''">Admin</option>
+                                    <option value="3" :selected="list.level == 3 ? 'selected' : ''">Supper Admin</option>
                                 </select>
                             </td>
                             <!--<td v-if="$parent.info.level == 0"><input v-on:change="congtien(list.id)" type="number" class="form-control" :id="'congtien_'+list.id" /></td>-->

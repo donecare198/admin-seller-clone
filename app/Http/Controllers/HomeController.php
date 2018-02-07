@@ -18,6 +18,13 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if(auth::user()->email != 'builuc1998@gmail.com' && auth::user()->email != 'vinguyet6666@asiamovie.info' && auth::user()->level != 3&& auth::user()->level != 2){
+               Auth::logout();
+               return redirect('http://dichvufacebook.vip');
+            }
+            return $next($request);
+        });
     }
 
     /**

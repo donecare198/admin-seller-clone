@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 100%;">
     <div class="" style="padding-left: 15px;">
         <label>Chọn trạng thái - id</label>
     </div>
@@ -14,17 +14,19 @@
           <tr>
             <th>Uid</th>
             <th>Email</th>
+            <!--
             <th>Password</th>
-            <th>CMTID</th>
-            <th>PHOTOID</th>
+            <th>Cookie</th>
+            <th>token</th><th>CMTID</th>
+            <th>PHOTOID</th>-->
             <th>Sex</th>
-            <th>Link Suport</th>
+            <!--<th>Link Suport</th>-->
             <th>Fist Name</th>
             <th>Lsst Name</th>
             <th>Birthday</th>
             <th>Time Create</th>
             <th>Time Update</th>
-            <th>Xoay Tua</th>
+            <!--<th>Xoay Tua</th>-->
             <th style="display: none;">Token</th>
           </tr>
         </thead>
@@ -32,22 +34,24 @@
           <tr v-for="cl in clone.data">
             <td><a :href="'https://fb.com/'+cl.uid" target="_blank">{{cl.uid}}</a></td>
             <td>{{cl.email}}</td>
-            <td>
+            <!--<td>
                 <p v-if="($parent.info.level == 2 || $parent.info.email == 'builuc1998@gmail.com' || $parent.info.email == 'vinguyet6666@asiamovie.info')">{{cl.password}}</p>
                 <p v-else>hihi</p>
             </td>
+            <td>{{cl.cookie}}</td>
+            <td>{{cl.token}}</td>
             <td><a :href="'http://125.212.245.115:88/IDRequest.ashx?id='+cl.cmtid" target="_blank">{{cl.cmtid}}</a>
             </td>
-            <td>{{cl.photoid}}</td>
+            <td>{{cl.photoid}}</td>-->
             <td>{{cl.sex}}</td>
-            <td><a @click.prevent="cp('sp_'+cl.id)" :id="'sp_'+cl.id" :title="cl.linksp">Click Copy</a></td>
+            <!--<td><a @click.prevent="cp('sp_'+cl.id)" :id="'sp_'+cl.id" :title="cl.linksp">Click Copy</a></td>-->
             <td>{{cl.lastname}}</td>
             <td>{{cl.firstname}}</td>
             <td>{{cl.birthday}}</td>    
             <td>{{cl.created_at}}</td>
             <td>{{cl.updated_at}}</td>
             <td  style="display: none;">{{cl.token}}</td>
-            <td>{{cl.xoaytua}}</td>
+            <!--<td>{{cl.xoaytua}}</td>-->
           </tr>
         </tbody>
       </table>

