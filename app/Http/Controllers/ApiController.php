@@ -12,6 +12,7 @@ use App\history;
 use Carbon\Carbon;
 use App\User;
 use App\transaction;
+use App\Config;
 
 class ApiController extends Controller
 {
@@ -43,7 +44,7 @@ class ApiController extends Controller
         ],200);
     }
     public function alluser(){
-        $his = User::all();
+        $his = User::orderBy('id','ASC')->orderBy('level', 'DESC')->paginate(25);
         return \response()->json($his);   
     }
     
@@ -55,28 +56,12 @@ class ApiController extends Controller
         $his = history::where('me','0')->orderBy('updated_at','DESC')->get();
         return \response()->json($his);
     }
-    
-    public function viewtask(){
-        $his = vip::select('vip.uid','vip.updated_at','vip.action','users.name','users.id')->join('users', 'users.id', '=', 'vip.userid')->get();
-        foreach($his as $h){
-            $count = history::select('id')->where('uid',$h->uid)->where('me','0')->where('action',$h->action)->count();
-            $json[] = array(
-                'uid' => $h->uid,
-                'updated_at' => Carbon::createFromFormat('Y-m-d H:i:s', $h->updated_at)->format('Y-m-d H:i:s'),
-                'action' => $h->action,
-                'total_postid' => $count,
-                'name' => $h->name,
-                'userid' => $h->id
-            ); 
-        }
-        return \response()->json($json);
-    }
     public function transaction(){
-        $transaction = transaction::select(['transaction.userid','transaction.money','transaction.created_at','transaction.id','transaction.status','users.name'])->join('users', 'users.id', '=', 'transaction.userid')->get();
+        $transaction = transaction::select(['transaction.userid','transaction.money','transaction.created_at','transaction.id','transaction.status','transaction.transactionid','users.name'])->join('users', 'users.id', '=', 'transaction.userid')->get();
         return $transaction;
     }
     public function ConfirmTransaction(Request $request){
-        if(auth::user()->level == 1){
+        if(auth::user()->email == 'builuc1998@gmail.com' || auth::user()->email == 'vinguyet6666@asiamovie.info' || auth::user()->level == 3){
             $transaction = transaction::select(['userid','money','status'])->where('id',$request->id)->first();
             if($transaction && $transaction->status != 'done'){
                 transaction::where('id',$request->id)->update(['status'=>'done','admin'=>auth::user()->id,'updated_at'=>date('Y-m-d H:i:s',time())]);
@@ -87,6 +72,31 @@ class ApiController extends Controller
             return response()->json(['success'=>'true','message'=>'Xác nhận giao dịch thành công!']);
         }else{
             return response()->json(['success'=>'false','message'=>'Bạn không có quyền thực hiện hành động này!']);
+        }
+    }
+    public function loadConfig(){
+        $config = Config::select(['key','value','link'])->get();
+        return $config;
+    }
+    public function changeConfig(Request $request){
+        $val = $request->all();
+        foreach($val as $key=>$v){
+            if($key == 'link-powered'){
+                Config::where('key','powered')->update(['link'=>$v]);
+            }else{
+                Config::where('key',$key)->update(['value'=>$v]);                
+            }
+        }
+        return response()->json(['success'=>'true','message'=>'Thay đổi thành công']);
+    }
+    public function changeChucvu(Request $request){
+        $level = $request->chucvu;
+        $id = $request->id;
+        if(auth::user()->email == 'builuc1998@gmail.com' || auth::user()->email == 'vinguyet6666@asiamovie.info' || auth::user()->level == 3){
+            User::where('id',$id)->update(['level'=>$level]);
+            return response()->json(['message'=>'Cập nhật thành công']);
+        }else{
+            return response()->json(['message'=>'Bạn không có quyền để thay đổi'],404);
         }
     }
 }
